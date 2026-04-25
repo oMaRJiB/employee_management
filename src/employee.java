@@ -2,7 +2,7 @@ import java.time.LocalDate;
 
 public class employee {
 
-    private int empid;
+    private final int empid;
     private String fname;
     private String lname;
     private String email;
@@ -22,21 +22,21 @@ public class employee {
     }
 
     // Getters
-    public int getEmpid() { return empid; }
-    public String getFname() { return fname; }
-    public String getLname() { return lname; }
-    public String getEmail() { return email; }
-    public LocalDate getHireDate() { return hireDate; }
-    public double getSalary() { return salary; }
-    public String getSsn() { return ssn; }
+    public int getEmpid() {return empid;}
+    public String getFname() {return fname;}
+    public String getLname() {return lname;}
+    public String getEmail() {return email;}
+    public LocalDate getHireDate() {return hireDate;}
+    public double getSalary() {return salary;}
+    public String getSsn() {return ssn;}
 
-    // Setters (needed for updates)
-    public void setFname(String fname) { this.fname = fname; }
-    public void setLname(String lname) { this.lname = lname; }
-    public void setEmail(String email) { this.email = email; }
-    public void setHireDate(LocalDate hireDate) { this.hireDate = hireDate; }
-    public void setSalary(double salary) { this.salary = salary; }
-    public void setSsn(String ssn) { this.ssn = ssn; }
+    // Setters
+    public void setFname(String fname) {this.fname = fname;}
+    public void setLname(String lname) {this.lname = lname;}
+    public void setEmail(String email) {this.email = email;}
+    public void setHireDate(LocalDate hireDate) {this.hireDate = hireDate;}
+    public void setSalary(double salary) {this.salary = salary;}
+    public void setSsn(String ssn) {this.ssn = ssn;}
 
     @Override
     public String toString() {

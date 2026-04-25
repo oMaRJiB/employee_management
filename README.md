@@ -7,7 +7,9 @@ Java + MySQL employee management system for CSC 3350
 - GitHub
 ## Folder Structure
 - docs: requirements and design documents
-- uml: UML diagrams
 - sql: schema and seed scripts
 - src: Java source code
 - lib: external JARs
+
+## Features
+
