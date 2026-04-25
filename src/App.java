@@ -73,7 +73,7 @@ public class App {
             case "3" -> System.out.println("\n[FEATURE NOT YET IMPLEMENTED: Update Salary]");
             case "4" -> System.out.println("\n[FEATURE NOT YET IMPLEMENTED: View Reports]");
             case "5" -> {loginManager.logout();return true;}
-            default -> System.out.println("\n✗ Invalid option. Please try again.");
+            default -> System.out.println("\nInvalid option! Please try again.");
         }
 
         return true;
@@ -95,7 +95,7 @@ public class App {
                 loginManager.logout();
                 return true;
             }
-            default -> System.out.println("\n✗ Invalid option. Please try again.");
+            default -> System.out.println("\nInvalid option! Please try again.");
         }
 
         return true;
