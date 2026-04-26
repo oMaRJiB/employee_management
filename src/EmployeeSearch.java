@@ -2,9 +2,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class EmployeeSearch {
+
+    private static class EmployeeSummary {
+        final int empId;
+        final String fullName;
+
+        EmployeeSummary(int empId, String fullName) {
+            this.empId = empId;
+            this.fullName = fullName;
+        }
+    }
+
     public static void searchEmployeeData(Scanner scanner) {
         System.out.println("\nSearch Employee Data (View Only)");
         System.out.println("Search by:");
@@ -17,7 +30,6 @@ public class EmployeeSearch {
         String option = scanner.nextLine().trim();
         String sql;
         String searchValue;
-        boolean useLike = false;
         Integer empId = null;
 
         switch (option) {
@@ -34,24 +46,18 @@ public class EmployeeSearch {
                     System.out.println("Employee ID must be a number.");
                     return;
                 }
-                sql = baseSearchQuery() + " WHERE e.empid = ? GROUP BY "
-                    + "e.empid, e.Fname, e.Lname, e.SSN, e.email, e.HireDate, e.Salary, "
-                    + "d.DOB, d.phone, d.emergency_contact_name, d.emergency_contact_phone";
             }
             case "2" -> {
                 System.out.print("Enter full or partial name: ");
-                searchValue = scanner.nextLine().trim().toLowerCase();
+                searchValue = scanner.nextLine().trim();
                 if (searchValue.isEmpty()) {
                     System.out.println("Name search text cannot be empty.");
                     return;
                 }
-                useLike = true;
-                sql = baseSearchQuery() + " WHERE LOWER(e.Fname) LIKE ? "
-                    + "OR LOWER(e.Lname) LIKE ? "
-                    + "OR LOWER(CONCAT(e.Fname, ' ', e.Lname)) LIKE ? GROUP BY "
-                    + "e.empid, e.Fname, e.Lname, e.SSN, e.email, e.HireDate, e.Salary, "
-                    + "d.DOB, d.phone, d.emergency_contact_name, d.emergency_contact_phone";
-                searchValue = "%" + searchValue + "%";
+                empId = chooseEmployeeByName(scanner, searchValue);
+                if (empId == null) {
+                    return;
+                }
             }
             case "3" -> {
                 System.out.print("Enter DOB (YYYY-MM-DD): ");
@@ -63,6 +69,8 @@ public class EmployeeSearch {
                 sql = baseSearchQuery() + " WHERE d.DOB = ? GROUP BY "
                     + "e.empid, e.Fname, e.Lname, e.SSN, e.email, e.HireDate, e.Salary, "
                     + "d.DOB, d.phone, d.emergency_contact_name, d.emergency_contact_phone";
+                runRecordQuery(searchValue, sql, false);
+                return;
             }
             case "4" -> {
                 System.out.print("Enter SSN: ");
@@ -74,6 +82,8 @@ public class EmployeeSearch {
                 sql = baseSearchQuery() + " WHERE e.SSN = ? GROUP BY "
                     + "e.empid, e.Fname, e.Lname, e.SSN, e.email, e.HireDate, e.Salary, "
                     + "d.DOB, d.phone, d.emergency_contact_name, d.emergency_contact_phone";
+                runRecordQuery(searchValue, sql, false);
+                return;
             }
             default -> {
                 System.out.println("Invalid search option.");
@@ -81,17 +91,98 @@ public class EmployeeSearch {
             }
         }
 
+        if (empId != null) {
+            sql = baseSearchQuery() + " WHERE e.empid = ? GROUP BY "
+                + "e.empid, e.Fname, e.Lname, e.SSN, e.email, e.HireDate, e.Salary, "
+                + "d.DOB, d.phone, d.emergency_contact_name, d.emergency_contact_phone";
+            runRecordQuery(String.valueOf(empId), sql, true);
+        }
+    }
+
+        private static Integer chooseEmployeeByName(Scanner scanner, String searchValue) {
+        String sql = """
+            SELECT e.empid,
+                   e.Fname,
+                   e.Lname
+            FROM employees e
+            WHERE LOWER(e.Fname) LIKE ?
+               OR LOWER(e.Lname) LIKE ?
+               OR LOWER(CONCAT(e.Fname, ' ', e.Lname)) LIKE ?
+            ORDER BY e.empid
+            """;
+
+        List<EmployeeSummary> matches = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            if (useLike) {
-                stmt.setString(1, searchValue);
-                stmt.setString(2, searchValue);
-                stmt.setString(3, searchValue);
-            } else if (empId != null) {
-                stmt.setInt(1, empId);
+            String likeValue = "%" + searchValue.toLowerCase() + "%";
+            stmt.setString(1, likeValue);
+            stmt.setString(2, likeValue);
+            stmt.setString(3, likeValue);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    matches.add(new EmployeeSummary(
+                        rs.getInt("empid"),
+                        rs.getString("Fname") + " " + rs.getString("Lname")));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("\nError searching employee names: " + e.getMessage());
+            return null;
+        }
+
+        if (matches.isEmpty()) {
+            System.out.println("\nNo employee data found matching your search.");
+            return null;
+        }
+
+        if (matches.size() == 1) {
+            EmployeeSummary single = matches.get(0);
+            System.out.printf("\nEmployee found: %d - %s%n", single.empId, single.fullName);
+            System.out.print("Is this the employee you want to view? (yes/no): ");
+            String confirm = scanner.nextLine().trim().toLowerCase();
+            if (confirm.equals("yes") || confirm.equals("y")) {
+                return single.empId;
+            }
+            System.out.println("Search cancelled.");
+            return null;
+        }
+
+        System.out.println();
+        System.out.printf("%-12s | %s%n", "Employee ID", "Name");
+        System.out.println("-------------+---------------------");
+        for (EmployeeSummary item : matches) {
+            System.out.printf("%-12d | %s%n", item.empId, item.fullName);
+        }
+
+        System.out.print("Enter Employee ID: ");
+        String selectedIdText = scanner.nextLine().trim();
+        int selectedId;
+        try {
+            selectedId = Integer.parseInt(selectedIdText);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid employee ID.");
+            return null;
+        }
+
+        boolean idExists = matches.stream().anyMatch(match -> match.empId == selectedId);
+        if (!idExists) {
+            System.out.println("Employee ID not found in the search results.");
+            return null;
+        }
+
+        return selectedId;
+    }
+
+    private static void runRecordQuery(String parameter, String sql, boolean isNumericId) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            if (isNumericId) {
+                stmt.setInt(1, Integer.parseInt(parameter));
             } else {
-                stmt.setString(1, searchValue);
+                stmt.setString(1, parameter);
             }
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -99,7 +190,6 @@ public class EmployeeSearch {
                 while (rs.next()) {
                     found = true;
                     displayEmployeeRecord(rs);
-                    displayPayrollHistory(conn, rs.getInt("empid"));
                     System.out.println();
                 }
                 if (!found) {
@@ -149,43 +239,5 @@ public class EmployeeSearch {
         System.out.println("Emergency Contact Phone: " + rs.getString("emergency_contact_phone"));
         System.out.println("Division(s): " + rs.getString("division_names"));
         System.out.println("Job Title(s): " + rs.getString("job_titles"));
-    }
-
-    private static void displayPayrollHistory(Connection conn, int empId) throws SQLException {
-        String payrollSql = """
-                SELECT pay_date,
-                       earnings,
-                       fed_tax,
-                       fed_med,
-                       fed_SS,
-                       state_tax,
-                       retire_401k,
-                       health_care
-                FROM payroll
-                WHERE empid = ?
-                ORDER BY pay_date DESC
-                """;
-
-        try (PreparedStatement payrollStmt = conn.prepareStatement(payrollSql)) {
-            payrollStmt.setInt(1, empId);
-            try (ResultSet payrollRs = payrollStmt.executeQuery()) {
-                if (!payrollRs.next()) {
-                    System.out.println("No payroll records found for this employee.");
-                    return;
-                }
-
-                System.out.println("\nPayroll History:");
-                do {
-                    System.out.println("  Pay Date: " + payrollRs.getString("pay_date"));
-                    System.out.println("    Earnings: " + payrollRs.getString("earnings"));
-                    System.out.println("    Fed Tax: " + payrollRs.getString("fed_tax"));
-                    System.out.println("    Fed Med: " + payrollRs.getString("fed_med"));
-                    System.out.println("    Fed SS: " + payrollRs.getString("fed_SS"));
-                    System.out.println("    State Tax: " + payrollRs.getString("state_tax"));
-                    System.out.println("    401k: " + payrollRs.getString("retire_401k"));
-                    System.out.println("    Health Care: " + payrollRs.getString("health_care"));
-                } while (payrollRs.next());
-            }
-        }
     }
 }
