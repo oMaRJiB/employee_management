@@ -49,13 +49,13 @@ public class App {
     System.out.println("========================================");
 
     // Common options (ALL users)
-    System.out.println("1. Search Employees");             // PT-06 [ALMOST DONE]
+    System.out.println("1. Search Employees");             // PT-06 [DONE]
     System.out.println("2. View My Pay History");          // PT-07 [DONE]
 
     // Admin-only options
     if (user.isHRAdmin()) {
         System.out.println("\n--- HR ADMIN FUNCTIONS ---");
-        System.out.println("3. Edit Employee");             // PT-01 & PT-05 & PT-03
+        System.out.println("3. Edit Employee");             // PT-01 & PT-05 & PT-03 [DONE]
         System.out.println("4. Delete Employee");           // PT-02 [DONE]
         System.out.println("5. Generate Reports");          // PT-08 [DONE]
         System.out.println("6. Assign Division");           // PT-09 [DONE]

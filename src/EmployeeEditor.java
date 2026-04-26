@@ -135,7 +135,7 @@ public class EmployeeEditor {
             return null;
         }
         try {
-            return Integer.parseInt(idText);
+            return Integer.valueOf(idText);
         } catch (NumberFormatException e) {
             System.out.println("Employee ID must be a number.");
             return null;
