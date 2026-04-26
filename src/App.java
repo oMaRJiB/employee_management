@@ -73,11 +73,11 @@ public class App {
         case "2" -> ReportManager.getPayrollHistory(user.getEmpID());
         case "3" -> {
             if (user.isHRAdmin()) {
-                System.out.println("\n[PT-05 NOT IMPLEMENTED]");
+                EmployeeEditor.editEmployeeData(scanner);
             } else {
                 loginManager.logout();
             }
-            }
+        }
         case "4" -> {
             if (user.isHRAdmin()) {
                 deleteEmployeeMenu();
