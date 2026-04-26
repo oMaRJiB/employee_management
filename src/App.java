@@ -5,6 +5,8 @@ public class App {
     private static final Scanner scanner = new Scanner(System.in);
     private static final LoginManager loginManager = new LoginManager(scanner);
     private static final ReportMenu reportMenu = new ReportMenu(scanner);
+    private static final DivisionAssignmentMenu divisionMenu = new DivisionAssignmentMenu(scanner);
+    private static final JobTitleAssignmentMenu jobTitleMenu = new JobTitleAssignmentMenu(scanner);
     private static User currentUser;
 
     @SuppressWarnings("ConvertToTryWithResources")
@@ -56,8 +58,8 @@ public class App {
         System.out.println("3. Edit Employee");             // PT-01 & PT-05 & PT-03
         System.out.println("4. Delete Employee");           // PT-02 [DONE]
         System.out.println("5. Generate Reports");          // PT-08 [DONE]
-        System.out.println("6. Assign Division");           // PT-09
-        System.out.println("7. Assign Job Title");          // PT-10
+        System.out.println("6. Assign Division");           // PT-09 [DONE]
+        System.out.println("7. Assign Job Title");          // PT-10 [DONE]
         System.out.println("8. Logout");
     } else {
         System.out.println("\n3. Logout");
@@ -83,25 +85,17 @@ public class App {
         }
         case "5" -> {
             if (user.isHRAdmin())
-                System.out.println("\n[PT-02 NOT IMPLEMENTED]");
+                reportMenu.showReportMenu();
             }
         case "6" -> {
             if (user.isHRAdmin())
-                System.out.println("\n[PT-03 NOT IMPLEMENTED]");
+                divisionMenu.showDivisionAssignmentMenu();
             }
         case "7" -> {
             if (user.isHRAdmin())
-                reportMenu.showReportMenu();
+                jobTitleMenu.showJobTitleAssignmentMenu();
             }
         case "8" -> {
-            if (user.isHRAdmin())
-                System.out.println("\n[PT-09 NOT IMPLEMENTED]");
-            }
-        case "9" -> {
-            if (user.isHRAdmin())
-                System.out.println("\n[PT-10 NOT IMPLEMENTED]");
-            }
-        case "10" -> {
             if (user.isHRAdmin()) {
                 loginManager.logout();
             }

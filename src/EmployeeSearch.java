@@ -41,7 +41,7 @@ public class EmployeeSearch {
                     return;
                 }
                 try {
-                    empId = Integer.parseInt(searchValue);
+                    empId = Integer.valueOf(searchValue);
                 } catch (NumberFormatException e) {
                     System.out.println("Employee ID must be a number.");
                     return;
