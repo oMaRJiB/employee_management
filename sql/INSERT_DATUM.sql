@@ -62,11 +62,23 @@ INSERT INTO employeeData.job_titles (job_title_id,job_title) VALUES
 	 (901,'Chief Finn. Officer'),
 	 (902,'Chief Info. Officer');
 INSERT INTO employeeData.login (empid,username,password_hash,`role`,created_at,updated_at) VALUES
-	 (1,'admin1','Ybjsm+iZ9gldZB0EzxKVrg==','HR_ADMIN','2026-04-24 22:29:56','2026-04-24 22:29:56'),
-	 (2,'snoopy','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-24 22:29:56','2026-04-24 22:29:56'),
-	 (3,'charlie','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-24 22:29:56','2026-04-24 22:29:56'),
-	 (4,'lucy','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-24 22:29:56','2026-04-24 22:29:56'),
-	 (5,'peppermint','RnIZ+y15oOdi01OUMadtPQ==','HR_ADMIN','2026-04-24 22:29:56','2026-04-24 22:29:56');
+	 (1,'sbeagle1','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (2,'cbrown2','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (3,'ldoctor3','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (4,'ppatti4','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (5,'lblanket5','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (6,'pdusty6','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (7,'sdoo7','RnIZ+y15oOdi01OUMadtPQ==','HR_ADMIN','2026-04-25 19:56:04','2026-04-25 20:00:25'),
+	 (8,'srodgers8','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (9,'vdinkley9','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (10,'dblake10','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04');
+INSERT INTO employeeData.login (empid,username,password_hash,`role`,created_at,updated_at) VALUES
+	 (11,'bbunny11','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (12,'dduck12','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (13,'ppig13','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (14,'efudd14','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04'),
+	 (15,'mmartian15','RnIZ+y15oOdi01OUMadtPQ==','GENERAL_EMPLOYEE','2026-04-25 19:56:04','2026-04-25 19:56:04');
+
 INSERT INTO employeeData.payroll (payID,pay_date,earnings,fed_tax,fed_med,fed_SS,state_tax,retire_401k,health_care,empid) VALUES
 	 (1,'2026-01-31',865.38,276.92,12.55,53.65,103.85,3.46,26.83,1),
 	 (2,'2025-12-31',923.08,295.38,13.38,57.23,110.77,3.69,28.62,1),
