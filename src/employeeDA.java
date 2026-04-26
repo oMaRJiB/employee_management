@@ -125,4 +125,81 @@ public class employeeDA {
             return false;
         }
     }
+
+    public static boolean deleteEmployee(int empID) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false); // Start transaction
+
+            // Delete from payroll
+            String deletePayroll = "DELETE FROM payroll WHERE empid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deletePayroll)) {
+                pstmt.setInt(1, empID);
+                pstmt.executeUpdate();
+            }
+
+            // Delete from employee_job_titles
+            String deleteJobTitles = "DELETE FROM employee_job_titles WHERE empid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteJobTitles)) {
+                pstmt.setInt(1, empID);
+                pstmt.executeUpdate();
+            }
+
+            // Delete from employee_division
+            String deleteDivision = "DELETE FROM employee_division WHERE empid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteDivision)) {
+                pstmt.setInt(1, empID);
+                pstmt.executeUpdate();
+            }
+
+            // Delete from demographics
+            String deleteDemographics = "DELETE FROM demographics WHERE empID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteDemographics)) {
+                pstmt.setInt(1, empID);
+                pstmt.executeUpdate();
+            }
+
+            // Delete from addresses
+            String deleteAddresses = "DELETE FROM addresses WHERE empID = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteAddresses)) {
+                pstmt.setInt(1, empID);
+                pstmt.executeUpdate();
+            }
+
+            // Finally, delete from employees (this will cascade to login)
+            String deleteEmployee = "DELETE FROM employees WHERE empid = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteEmployee)) {
+                pstmt.setInt(1, empID);
+                int rowsDeleted = pstmt.executeUpdate();
+                if (rowsDeleted > 0) {
+                    conn.commit();
+                    return true;
+                } else {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Database error deleting employee: " + e.getMessage());
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    System.err.println("Error rolling back transaction: " + ex.getMessage());
+                }
+            }
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    System.err.println("Error closing connection: " + e.getMessage());
+                }
+            }
+        }
+    }
 }

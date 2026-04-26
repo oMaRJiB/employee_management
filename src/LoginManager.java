@@ -28,20 +28,20 @@ public class LoginManager {
 
             if (user != null) {
                 this.currentUser = user;
-                System.out.println("\n✓ Login successful!");
+                System.out.println("\nLogin successful!");
                 System.out.println("Welcome, " + user.getFname() + " " + user.getLname());
                 System.out.println("Role: " + user.getRole());
                 return user;
             } else {
                 attempts++;
-                System.out.println("\n✗ Login failed: Invalid username or password.");
+                System.out.println("\nLogin failed: Invalid username or password.");
                 if (attempts < MAX_ATTEMPTS) {
                     System.out.println("Attempts remaining: " + (MAX_ATTEMPTS - attempts));
                 }
             }
         }
 
-        System.out.println("\n✗ Maximum login attempts exceeded. Access denied.");
+        System.out.println("\nMaximum login attempts exceeded. Access denied.");
         return null;
     }
     public User getCurrentUser() {

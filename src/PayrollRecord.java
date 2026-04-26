@@ -50,17 +50,18 @@ public class PayrollRecord {
 
     @Override
     public String toString() {
-        return "Pay ID: " + payID +
-                "\nEmployee ID: " + empID +
-                "\nDate: " + payDate +
-                "\nEarnings: " + earnings +
-                "\nDeductions: " +
-                "\n  Fed Tax: " + fedTax +
-                "\n  Fed Med: " + fedMed +
-                "\n  Fed SS: " + fedSS +
-                "\n  State Tax: " + stateTax +
-                "\n  401k: " + retire401k +
-                "\n  Health Care: " + healthCare +
-                "\nNet Pay: " + getNetPay();
-    }
+        return String.format(
+            "%-6d %-6d %-12s %-10.2f %-8.2f %-8.2f %-8.2f %-10.2f %-10.2f %-10.2f %-10.2f",
+            payID,
+            empID,
+            payDate,
+            earnings,
+            fedTax,
+            fedMed,
+            fedSS,
+            stateTax,
+            retire401k,
+            healthCare,
+            getNetPay());
+        }
 }
